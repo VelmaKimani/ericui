@@ -1,4 +1,6 @@
+import 'package:ericui/cubit/counter_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Ui extends StatefulWidget {
   @override
@@ -104,7 +106,11 @@ class _UiState extends State<Ui> {
                                       icon: Icon(
                                         Icons.arrow_downward,
                                       ),
-                                      onPressed: () => {},
+                                      onPressed: () => {
+                                        BlocProvider.of<CounterCubit>(context)
+                                            .increment()
+                                        //context.bloc<CounterCubit>().decrement()
+                                      },
                                       iconSize: 30,
                                       color: Colors.green[400],
                                     ),
@@ -133,13 +139,32 @@ class _UiState extends State<Ui> {
                                         Container(
                                           padding: EdgeInsets.only(right: 75),
                                           height: 25,
-                                          child: Text(
-                                            '+ 6,143',
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black87,
-                                            ),
+                                          child: BlocConsumer<CounterCubit,
+                                              CounterState>(
+                                            listener: (context, state) {
+                                              if (state.wasIncremented ==
+                                                  true) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content:
+                                                        Text('Incremented'),
+                                                    duration: Duration(
+                                                        milliseconds: 300),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            builder: (context, state) {
+                                              return Text(
+                                                state.counterValue.toString(),
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black87,
+                                                ),
+                                              );
+                                            },
                                           ),
                                         )
                                       ],
@@ -169,7 +194,10 @@ class _UiState extends State<Ui> {
                                         Icons.arrow_upward,
                                       ),
                                       iconSize: 30,
-                                      onPressed: () => {},
+                                      onPressed: () => {
+                                        BlocProvider.of<CounterCubit>(context)
+                                            .decrement()
+                                      },
                                       color: Colors.red[400],
                                     ),
                                   ),
@@ -197,13 +225,30 @@ class _UiState extends State<Ui> {
                                       Container(
                                         padding: EdgeInsets.only(right: 80),
                                         height: 25,
-                                        child: Text(
-                                          '- 5,288',
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black87,
-                                          ),
+                                        child: BlocConsumer<CounterCubit,
+                                            CounterState>(
+                                          listener: (context, state) {
+                                            if (state.wasIncremented == false) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text('Decremented'),
+                                                  duration: Duration(
+                                                      milliseconds: 300),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          builder: (context, state) {
+                                            return Text(
+                                              state.counterValue.toString(),
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.black87,
+                                              ),
+                                            );
+                                          },
                                         ),
                                       )
                                     ],
